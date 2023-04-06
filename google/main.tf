@@ -1,10 +1,21 @@
-module "storage_pool" {
-  source        = "path/to/module"
-  name          = "my-storage-pool"
-  size          = 1000
-  service_level = "standard"
-  region        = "us-west1"
-  api_key       = "my-api-key"
-  api_secret    = "my-api-secret"
-  endpoint      = "https://api.cloud.netapp.com"
+provider "google" {
+  version = "3.5.0"
+  credentials = file("cloud-heroes-terraform.json")
+  #credentials = "../cloud-heroes-terraform.json"
+
+
+  project = "cloud-heroes"
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}
+
+resource "google_compute_network" "vpc_network" {
+  name = "terraform-network"
+}
+terraform {
+  backend "gcs" {
+    bucket = "prabu_bucket"
+    prefix = "terraform1"
+    credentials = "cloud-heroes-terraform.json"
+  }
 }
